@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    {{ n.title }}
+{% endblock %}
+{% if user.is_authenticated %}
+    {% block proimg %}
+        {% if user.image %}
+            <img class="rounded-circle" src="{{ user.image.url }}" width="30" height="30" alt="img">
+        {% else %}
+            <img class="rounded-circle" src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="30"
+                 height="30">
+        {% endif %}
+    {% endblock %}
+{% endif %}
+{% block carousel %}{% endblock %}
+{% block content %}<br><br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-7" style="background-color:lavender;"><h1>Published By: {{ n.teacher.name }}</h1><br>
+                <h1>Published Date: {{ n.published_date }}</h1><br>
+                <h1>Start By: {{ n.start_time }}</h1><br>
+                <h1>End By: {{ n.end_time }}</h1><br>
+
+                {% if user.is_authenticated %}
+                    {% if user.is_teacher %}
+                        <a href="{% url 'accounts:add_question' tid n.id %}"><h3>Add Question</h3></a><br>
+
+                        {% for q in n.question_set.all %}
+                            <a href="{% url 'accounts:ques_detail' tid n.id q.id %}"><h3>{{ q.question_name }}</h3></a><br>
+                        {% endfor %}
+                    {% elif user.is_student %}
+                        <h1><a href="{% url 'accounts:ques_paper' tid n.id %}">Start Exam</a></h1><br>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block messaging %}{% endblock %}

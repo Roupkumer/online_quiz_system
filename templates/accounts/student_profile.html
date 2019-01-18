@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% if user.is_authenticated %}
+    {% block proimg %}
+        {% if user.image %}
+            <img class="rounded-circle" src="{{ user.image.url }}" width="30" height="30" alt="img">
+        {% else %}
+            <img class="rounded-circle" src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="30"
+                 height="30">
+        {% endif %}
+    {% endblock %}
+{% endif %}
+{% block carousel %}{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-7">
+                {% if s.image %}
+                    <img src="{{ s.image.url }}" width="400px" height="300px" alt="img"><br>
+                {% else %}
+                    <img src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="100px" height="100px"><br>
+                {% endif %}
+                <h2>Name: {{ s.name }}</h2>
+                <h2>Email: {{ s.email }}</h2>
+                <h2>Class Roll: {{ s.class_roll }}</h2>
+                <h2>Exam Roll: {{ s.exam_roll }}</h2>
+                <h2>Registration No: {{ s.registration_no }}</h2>
+                <h2>Batch: {{ s.batch }}</h2>
+                {% if s.year == '11' %}
+                    <h2>Year: 1st Year 1st Semester</h2><br>
+                {% elif s.year == '12' %}
+                    <h2>Year: 1st Year 2nd Semester</h2><br>
+                {% elif s.year == '21' %}
+                    <h2>Year: 2nd Year 1st Semester</h2><br>
+                {% elif s.year == '22' %}
+                    <h2>Year: 2nd Year 2nd Semester</h2><br>
+                {% elif s.year == '31' %}
+                    <h2>Year: 3rd Year 1st Semester</h2><br>
+                {% elif s.year == '32' %}
+                    <h2>Year: 3rd Year 2nd Semester</h2><br>
+                {% elif s.year == '41' %}
+                    <h2>Year: 4th Year 1st Semester</h2><br>
+                {% elif s.year == '42' %}
+                    <h2>Year: 4th Year 2nd Semester</h2><br>
+                {% elif s.year == '51' %}
+                    <h2>Year: Masters 1st Semester</h2><br>
+                {% elif s.year == '52' %}
+                    <h2>Year: Masters 2nd Semester</h2><br>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    {% if user.is_student %}
+                        {% if user.id == s.id %}
+                            <a href="{% url 'accounts:student_up' s.id %}"><h2>Update Your Profile</h2></a>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block messaging %}{% endblock %}

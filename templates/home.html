@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Home{% endblock %}
+{% if user.is_authenticated %}
+    {% block proimg %}
+        {% if user.image %}
+            <img class="rounded-circle" src="{{ user.image.url }}" width="30" height="30" alt="img">
+        {% else %}
+            <img class="rounded-circle" src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="30"
+                 height="30">
+        {% endif %}
+    {% endblock %}
+{% endif %}
+{% block content %}
+    {% if user.is_authenticated %}
+        {% if user.is_teacher %}
+            <ul>
+                {% for n in t.notice_set.all %}
+                    <li><h2><a href="{% url 'accounts:notice_detail' t.id n.id %}">{{ n.title }}</a></h2>&nbsp;Published
+                        Date&nbsp;{{ n.published_date }}</li><br>
+                {% endfor %}
+            </ul>
+        {% elif user.is_student %}
+            <ul>
+                {% for t in stu.course_teacher.all %}
+                    <ul>
+                        {% for n in t.notice_set.all %}
+                            <li><h2><a href="{% url 'accounts:notice_detail' t.id n.id %}"> {{ n.title }}</a></h2>&emsp;Published
+                                By&nbsp;{{ n.teacher }},&nbsp;Published Date&nbsp;{{ n.published_date }}</li><br>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <hr>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,223 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="{% static 'online_quiz_system/img/ju_logo_2.png' %}">
+    <link href="{% static 'online_quiz_system/css/bootstrap.min.css' %}" rel="stylesheet">
+    <title>{{ notice.title }}</title>
+    <script type="text/javascript">
+        function startTime() {
+            var today = new Date();
+            var cmo = today.getMonth() + 1;
+            var cd = today.getDate();
+            var ch = today.getHours();
+            var cm = today.getMinutes();
+            var cs = today.getSeconds();
+
+            {% if de %}
+                document.getElementById('txt').innerHTML = ntime(cmo, cd, ch, cm, cs, {{ delay.0 }}, {{ delay.1 }}, {{ delay.2 }}, {{ delay.3 }}, {{ delay.4 }});
+            {% endif %}
+            {% if p %}
+                document.getElementById('proc').innerHTML = ntime(cmo, cd, ch, cm, cs, {{ pro.0 }}, {{ pro.1 }}, {{ pro.2 }}, {{ pro.3 }}, {{ pro.4 }});
+            {% endif %}
+
+
+            setTimeout(startTime, 100);
+        }
+
+        function ntime(cmo, cd, ch, cm, cs, mo, d, h, m, s) {
+            var nmo, nd, nh, nm, ns;
+            if (s >= cs) {
+                ns = s - cs;
+            }
+            else {
+                ns = s - cs + 60;
+                cm += 1;
+            }
+            if (m >= cm) {
+                nm = m - cm;
+            }
+            else {
+                nm = m - cm + 60;
+                ch += 1;
+            }
+            if (h >= ch) {
+                nh = h - ch;
+            }
+            else {
+                nh = h - ch + 24;
+                cd += 1;
+            }
+            if (d >= cd) {
+                nd = d - cd;
+            }
+            else {
+                nd = d - cd + 31;
+                cmo += 1;
+            }
+            if (mo >= cmo) {
+                nmo = mo - cmo;
+            }
+            else {
+                nmo = mo - cmo + 12;
+            }
+
+            if (nmo <= 0 && nd <= 0 && nh <= 0 && nm <= 0 && ns <= 0) {
+                setTimeout(function () {
+                    window.location.reload(1);
+                });
+            }
+
+            return nmo + "Month " + nd + "Day " + nh + "Hours " + nm + "Min " + ns + "s";
+        }
+    </script>
+</head>
+
+<body onload="startTime()">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <img src="{% static 'online_quiz_system/img/ju_logo.png' %}" alt="logo" style="width:40px;">
+        <a class="navbar-brand" href="{% url 'home' %}" style="color:#000;">&nbsp;<b></b></a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'home' %}" style="color:#000;"><b>Home</b> <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'accounts:all_t' %}" style="color:#000;"><b>Teachers</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:all_s' %}" style="color:#000;"><b>Students</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:8000/admin/" style="color:#000;"><b>Admin</b></a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        {% if user.image %}
+                            <img class="rounded-circle" src="{{ user.image.url }}" width="30" height="30" alt="img">
+                        {% else %}
+                            <img class="rounded-circle" src="{% static 'online_quiz_system/img/blank_profile.png' %}"
+                                 width="30"
+                                 height="30">
+                        {% endif %}
+                        &nbsp;<b>{{ user.name }}</b></a>
+                        <ul class="dropdown-menu">
+                            {% if user.is_teacher %}
+                                <li><a href="{% url 'accounts:teacher_p' user.id %}">Profile</a></li>
+                            {% elif user.is_student %}
+                                <li><a href="{% url 'accounts:student_p' user.id %}">Profile</a></li>
+                            {% endif %}
+
+                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="glyphicon glyphicon-user"></span><b>Signup</b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'accounts:teacher_s' %}">Teacher</a></li>
+                            <li><a href="{% url 'accounts:student_s' %}">Student</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-log-in"></span><a href="{% url 'login' %}"><b>Login</b></a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</header>
+<br><br>
+<div class="container">
+    <div class="row">
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+        <div class="col-md-5" style="background-color:lavender;">
+            <h3 style="color: blue; margin-left: 10%">{{ notice.title }}</h3>&emsp;<h6
+                style="color: blue;margin-left: 10%">Published Date: {{ notice.published_date }}</h6>
+            <h4 style="color: green; margin-left: 10%">Exam Start :</h4><h4
+                style="color: red;margin-left: 10%"> {{ notice.start_time }}</h4>
+            <h4 style="color: green; margin-left: 10%">Exam End :</h4><h4
+                style="color: red;margin-left: 10%"> {{ notice.end_time }}</h4><br>
+            <p>{{ now }}</p>
+        </div>
+        <div class="col-md-7" style="background-color:lavender;">
+            {% if  de %}
+                <h2 style="color: green">{{ de }}</h2>
+                <h1 id="txt" style="color: red"></h1>
+            {% endif %}
+            {% if p %}
+                <h2 style="color: green">{{ p }}</h2>
+                <h2 style="color: green">Time Remaining</h2>
+                <h1 id="proc" style="color: red"></h1>
+
+            {% endif %}
+            {% if over %}
+                <h2 style="color: green">{{ over }}</h2><br><br>
+                <h2><a href="{% url 'accounts:result' tid nid %}">See Result</a></h2>
+            {% endif %}
+
+        </div>
+    </div>
+    <hr>
+    <br>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            {% if notice.document %}
+                <img src="{{ notice.document.url }}" width="100%" height="100%"><br>
+            {% else %}
+                {% if al %}
+                    <h1>{{ al }}</h1>
+                {% else %}
+                    {% if p %}
+                        <form action="{% url 'accounts:savedata' tid nid %}" method="post">
+                            {% csrf_token %}
+
+                            {% for question in notice.question_set.all %}
+                                {{ forloop.counter }}. {{ question.question_name }}<br>
+                                {% for choice in question.choice_set.all %}
+                                    &nbsp;&nbsp;&nbsp;
+                                    <input type="radio" name="choice{{ question.question_name }}"
+                                           id="choice{{ forloop.counter }}"
+                                           value="{{ choice.id }}">
+                                    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+
+                                {% endfor %}
+                            {% endfor %}
+                            <input type="submit" value="OK">
+                        </form>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+<hr>
+<br><br>
+<!-- FOOTER -->
+<footer class="container">
+    <p class="float-right"><a href="#">Back to top</a></p>
+</footer>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="{% static 'online_quiz_system/js/jquery-3.3.1.min.js' %}"><\/script>')</script>
+<script src="{% static 'online_quiz_system/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

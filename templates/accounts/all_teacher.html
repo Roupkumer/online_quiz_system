@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    All Students
+{% endblock %}
+{% if user.is_authenticated %}
+    {% block proimg %}
+        {% if user.image %}
+            <img class="rounded-circle" src="{{ user.image.url }}" width="30" height="30" alt="img">
+        {% else %}
+            <img class="rounded-circle" src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="30"
+                 height="30">
+        {% endif %}
+    {% endblock %}
+{% endif %}
+{% block carousel %}{% endblock %}
+{% block content %}<br><br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-7">
+                <h1>All Teachers</h1><br>
+                <ol>
+                {% for t in teacher %}
+                    <h3><li><a href="{% url 'accounts:teacher_p' t.id %}"> {{ t.name }}</a></li></h3><br>
+                {% endfor %}
+                </ol>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block messaging %}{% endblock %}

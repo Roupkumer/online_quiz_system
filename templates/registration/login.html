@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Signin
+{% endblock %}
+{% block carousel %}{% endblock %}
+{% block content %}<br><br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-7" style="background-color:lavender;">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label class="control-label col-sm-2"><b>{{ field.label_tag }}</b></label>
+                            <b>{{ field }}</b>
+                        </div>
+                    {% endfor %}
+                    <button class="btn btn-outline-success btn-lg" style="margin-left: 20%;" type="submit">Login
+                    </button>
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block messaging %}{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    Update
+{% endblock %}
+{% if user.is_authenticated %}
+    {% block proimg %}
+        {% if user.image %}
+            <img class="rounded-circle" src="{{ user.image.url }}" width="30" height="30" alt="img">
+        {% else %}
+            <img class="rounded-circle" src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="30"
+                 height="30">
+        {% endif %}
+    {% endblock %}
+{% endif %}
+{% block carousel %}{% endblock %}
+<h3>Update</h3><br>
+{% block content %}
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-7" style="background-color:lavender;">
+                <form class="form-horizontal" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <section>
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label class="control-label col-sm-2"><b>{{ field.label_tag }}</b></label>
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </section>
+                    <button class="btn btn-outline-success btn-lg" type="submit" style="margin-left: 10%;">Update
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block messaging %}{% endblock %}

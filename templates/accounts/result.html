@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    Result
+{% endblock %}
+{% if user.is_authenticated %}
+    {% block proimg %}
+        {% if user.image %}
+            <img class="rounded-circle" src="{{ user.image.url }}" width="30" height="30" alt="img">
+        {% else %}
+            <img class="rounded-circle" src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="30"
+                 height="30">
+        {% endif %}
+    {% endblock %}
+{% endif %}
+{% block carousel %}{% endblock %}
+{% block content %}
+    <br><br>
+    <table class="table table-bordered table-hover" bgcolor="white">
+        <thead>
+        <tr>
+            <th>SI</th>
+            <th>Name</th>
+            <th>Class Roll</th>
+            <th>Exam Roll</th>
+            <th>Total Question</th>
+            <th>Right</th>
+            <th>Wrong</th>
+            <th>Marks</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in res %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ r.name }}</td>
+                <td>{{ r.class_roll }}</td>
+                <td>{{ r.exam_roll }}</td>
+                <td>{{ r.total }}</td>
+                <td>{{ r.ac }}</td>
+                <td>{{ r.wrong }}</td>
+                <td>{{ r.marks }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block messaging %}{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% if user.is_authenticated %}
+    {% block proimg %}
+        {% if user.image %}
+            <img class="rounded-circle" src="{{ user.image.url }}" width="30" height="30" alt="img">
+        {% else %}
+            <img class="rounded-circle" src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="30"
+                 height="30">
+        {% endif %}
+    {% endblock %}
+{% endif %}
+{% block carousel %}{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-7">
+                {% if t.image %}
+                    <img src="{{ t.image.url }}" width="300px" height="300px" alt="img"><br>
+                {% else %}
+                    <img src="{% static 'online_quiz_system/img/blank_profile.png' %}" width="100px" height="100px"><br>
+                {% endif %}
+                <h1>Name: {{ t.name }}</h1>
+                <h1>Email: {{ t.email }}</h1><br>
+                {% if user.is_authenticated %}
+                    {% if user.is_teacher %}
+                        {% if user.id == t.id %}
+                            <a href="{% url 'accounts:add_notice' t.id %}" target="_blank"><h2>Add Notice</h2></a><br>
+                            <a href="{% url 'accounts:teacher_up' t.id %}"><h2>Update Your Profile</h2></a>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block messaging %}{% endblock %}
